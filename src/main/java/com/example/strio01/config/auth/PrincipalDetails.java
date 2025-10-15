@@ -44,14 +44,14 @@ public class PrincipalDetails implements UserDetails{
 	@Override
 	public String getPassword() {		
 		//return authInfo.getMemberPass();
-		return authInfo.getPwd();
+		return authInfo.getPasswd();
 	}
 
 	@Override
 	public String getUsername() {
-		log.info("PrincipalDetails -> getUsername()-> adminId:{}",  authInfo.getAdminId());
+		log.info("PrincipalDetails -> getUsername()-> adminId:{}",  authInfo.getUserId());
 		//return authInfo.getMemberEmail();
-		return authInfo.getAdminId();
+		return authInfo.getUserId();
 	}
 	
 	// 계정의 만료 여부를 리턴합니다.

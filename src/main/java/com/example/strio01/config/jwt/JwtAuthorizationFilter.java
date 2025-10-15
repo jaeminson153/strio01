@@ -70,8 +70,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			// Authentication객체를 강제로 만들고 세션에 넣어준다.
 			Optional<AdminEntity> optMembersEntity = adminRepository.findById(username);
 			AdminEntity adminEntity = optMembersEntity.get();
-			log.info("************{}", adminEntity.getAdminId());
-			AuthInfo authInfo = new AuthInfo(adminEntity.getAdminId(), adminEntity.getPwd(), adminEntity.getName());
+			log.info("************{}", adminEntity.getUserId());
+			AuthInfo authInfo = new AuthInfo(adminEntity.getUserId(), adminEntity.getPasswd(), adminEntity.getUserName());
 			PrincipalDetails principalDetails = new PrincipalDetails(authInfo);
 
 

@@ -13,7 +13,7 @@ public class JwtTokenProvider {
        return JWT.create()
                .withSubject("AccessToken")
                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 )) //1분
-               .withClaim("adminId", authInfo.getAdminId())
+               .withClaim("adminId", authInfo.getUserId())
                //.withClaim("authRole", authInfo.getAuthRole().toString())
                .sign(Algorithm.HMAC512(secretKey));
    } 

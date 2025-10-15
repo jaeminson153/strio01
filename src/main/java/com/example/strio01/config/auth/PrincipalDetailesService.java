@@ -31,22 +31,22 @@ public class PrincipalDetailesService implements UserDetailsService {
 	// Security Session에 저장을 한다.
 
 	@Override
-	public UserDetails loadUserByUsername(String adminId) throws UsernameNotFoundException {
-		log.info("PrincipalDetailesService => loadUserByUsername() => adminId:{}", adminId);
+	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+		log.info("PrincipalDetailesService => loadUserByUsername() => adminId:{}", userId);
 		
-		Optional<AdminEntity> optMembersEntity = adminRepository.findById(adminId);
+		Optional<AdminEntity> optMembersEntity = adminRepository.findById(userId);
 		
 		if(optMembersEntity.isEmpty()) {
-			throw new UsernameNotFoundException(adminId + "사용자명이 존재하지 않습니다.");
+			throw new UsernameNotFoundException(userId + "사용자명이 존재하지 않습니다.");
 		}
 		
 		AdminEntity adminEntity = optMembersEntity.get();
-		log.info("adminId:{} pwd:{} name:{} ",  adminEntity.getAdminId(), adminEntity.getPwd(),adminEntity.getName());
+		log.info("adminId:{} pwd:{} name:{} ",  adminEntity.getUserId(), adminEntity.getPasswd(),adminEntity.getUserName());
 		
 		AuthInfo authInfo = AuthInfo.builder()
-				.adminId(adminEntity.getAdminId())
-				.pwd(adminEntity.getPwd())
-				.name(adminEntity.getName())				
+				.userId(adminEntity.getUserId())
+				.passwd(adminEntity.getPasswd())
+				.userName(adminEntity.getUserName())				
 				.build();
 		return new PrincipalDetails(authInfo);
 	}

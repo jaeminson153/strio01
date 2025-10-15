@@ -17,28 +17,28 @@ import lombok.ToString;
 @Getter
 @ToString
 public class AdminDTO {
-	private String adminId; // 관리자 아이디
-	private String pwd; 	// 비밀번호
-	private String name; 	// 이름
-	private String phone; 	// 전화번호
+	private String userId; 		// 사용자 아이디
+	private String passwd; 		// 비밀번호
+	private String userName; 	// 이름
+	private String email; 		// 전화번호
 	
 	// DTO -> Entity
 	public AdminEntity toEntity() {
 		return AdminEntity.builder()
-				.adminId(adminId)
-				.pwd(pwd)
-				.name(name)
-				.phone(phone)
+				.userId(userId)
+				.passwd(passwd)
+				.userName(userName)
+				.email(email)
 				.build();
 	}
 
 	// Entity -> DTO
 	public static AdminDTO toDTO(AdminEntity adminEntity) {
 		return AdminDTO.builder()
-				.adminId(adminEntity.getAdminId())
-				.pwd(adminEntity.getPwd())
-				.name(adminEntity.getName())
-				.phone(adminEntity.getPhone())
+				.userId(adminEntity.getUserId())
+				.passwd(adminEntity.getPasswd())
+				.userName(adminEntity.getUserName())
+				.email(adminEntity.getEmail())
 				.build();
 	}	
 }

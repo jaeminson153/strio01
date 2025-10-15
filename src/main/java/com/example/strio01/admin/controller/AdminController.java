@@ -72,9 +72,9 @@ public class AdminController {
 			}
 			AdminEntity adminEntity = adminService.findByAdminId(email).orElseThrow(() -> new RuntimeException("사용자 없음"));
 			AuthInfo authInfo = AuthInfo.builder()
-					.adminId(adminEntity.getAdminId())
-					.pwd(adminEntity.getPwd())
-					.name(adminEntity.getName())
+					.userId(adminEntity.getUserId())
+					.passwd(adminEntity.getPasswd())
+					.userName(adminEntity.getUserName())
 					.build();
 			String newAccessToken = jwtTokenProvider.createAccessToken(authInfo);
 			

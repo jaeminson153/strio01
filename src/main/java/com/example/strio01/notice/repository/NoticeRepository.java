@@ -28,12 +28,12 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
 	
 	
 	//게시글 상세보기	
-	@Query(value="SELECT b FROM NoticeEntity b WHERE b.noticeId = :noticeId")
+	@Query(value="SELECT b FROM PatientEntity b WHERE b.noticeId = :noticeId")
 	NoticeEntity findWithNoticeByNoticeId(@Param("noticeId") long noticeId);
 	
 		
 	//  파일첨부 가져오기
-	@Query(value = "SELECT b.noticeId  FROM NoticeEntity b WHERE b.noticeId = :noticeId")
+	@Query(value = "SELECT b.noticeId  FROM PatientEntity b WHERE b.noticeId = :noticeId")
 	String getUploadFilename(@Param("noticeId") long noticeId);
 	
 	//게시글 수정

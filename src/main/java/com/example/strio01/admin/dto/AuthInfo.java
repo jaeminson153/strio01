@@ -9,9 +9,9 @@ import lombok.ToString;
 @Getter
 //로그인 성공 후 인증 상태 정보를 세션에 보관할 때 사용
 public class AuthInfo {
-	private String adminId;
-	private String pwd;
-	private String name;
+	private String userId;
+	private String passwd;
+	private String userName;
 	 
 	
 	public AuthInfo() {
@@ -20,15 +20,15 @@ public class AuthInfo {
 	
 	public AuthInfo(String id,  String pwd) {
 		super();
-		this.adminId = id;		
-		this.pwd = pwd;
+		this.userId = id;		
+		this.passwd = pwd;
 	}
 	
 	public AuthInfo(String id, String pwd, String name) {
 		super();
-		this.adminId = id;
-		this.name = name;
-		this.pwd = pwd;		
+		this.userId = id;
+		this.userName = name;
+		this.passwd = pwd;		
 	}
 
 	

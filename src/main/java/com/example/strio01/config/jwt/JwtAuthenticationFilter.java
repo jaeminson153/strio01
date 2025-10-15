@@ -59,10 +59,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			// 스트림을 통해서 읽어온 json을 MembersdTO 객체로 변경한다.
 			ObjectMapper om = new ObjectMapper();
 			AdminDTO adminDTO = om.readValue(request.getInputStream(), AdminDTO.class);
-			log.info("adminId:{}, memberPass:{}", adminDTO.getAdminId(), adminDTO.getPwd());
+			log.info("adminId:{}, memberPass:{}", adminDTO.getUserId(), adminDTO.getPasswd());
 			
 			UsernamePasswordAuthenticationToken authenticationToken 
-			 = new UsernamePasswordAuthenticationToken(adminDTO.getAdminId(), adminDTO.getPwd());
+			 = new UsernamePasswordAuthenticationToken(adminDTO.getUserId(), adminDTO.getPasswd());
 			
 			authentication = authManager.authenticate(authenticationToken);
 			
@@ -90,7 +90,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		 AuthInfo authInfo = principalDetails.getAuthInfo(); 
 		    
 		 String accessToken = jwtTokenProvider.createAccessToken(authInfo);
-		 String refreshToken = jwtTokenProvider.createRefreshToken(authInfo.getAdminId());
+		 String refreshToken = jwtTokenProvider.createRefreshToken(authInfo.getUserId());
 		
 		log.info("accessToken:{}", accessToken);
 		log.info("refreshToken: {}", refreshToken);
@@ -116,8 +116,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		response.setHeader("Access-Control-Expose-Headers", "Authorization, Authorization-refresh");
 		
 		final Map<String, Object> body = new HashMap<>();
-		body.put("name", principalDetails.getAuthInfo().getName());
-		body.put("adminId", principalDetails.getAuthInfo().getAdminId());
+		body.put("name", principalDetails.getAuthInfo().getUserName());
+		body.put("adminId", principalDetails.getAuthInfo().getUserId());
 		//body.put("authRole", principalDetails.getAuthInfo().getAuthRole());
 		// body.put("accessToken", accessToken);
 		// body.put("refreshToken", refreshToken);

@@ -18,12 +18,13 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-@Table(name = "admin")
+@Table(name = "user_info")
 public class AdminEntity {
 
 	@Id
-	private String adminId;
-	private String name;
-	private String pwd;
-	private String phone;
+	private String userId;
+	private String userName;
+	private String passwd;
+	private String email;
+	private String roleCd;
 }
