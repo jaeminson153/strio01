@@ -37,7 +37,7 @@ public class BoardServiceImp implements BoardService {
 	@Override
 	public List<BoardDTO> listProcess(PageDTO pv) {
 		List<BoardEntity> listBoardEntity = boardRepository.findPagedBoardsByRownum(pv);
-		// Stream<BoardEntity> => Stream<BoardDTO> => List<BoardDTO>
+		// Stream<NoticeEntity> => Stream<NoticeDTO> => List<NoticeDTO>
 		List<BoardDTO> listBoardDTO = listBoardEntity.stream().map(BoardDTO::toDTO).collect(Collectors.toList());
 
 		return listBoardDTO;

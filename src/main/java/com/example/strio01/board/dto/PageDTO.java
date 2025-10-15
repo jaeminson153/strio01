@@ -9,15 +9,15 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PageDTO {
-	private Long currentPage; // 현재페이지
-	private Long totalCount; // 총 레코드수
-	private Long blockCount = 5L; // 한 페이지에 보여줄 레코드 수
-	private Long blockPage = 3L; // 한 블록에 보여줄 페이지 수
-	private Long totalPage; // 총 페이지수
-	private Long startRow; // 시작 레코드 번호
-	private Long endRow; // 끝 레코드 번호
-	private Long startPage; // 한 블록의 시작 페이지 번호
-	private Long endPage; // 한 블록의 끝 페이지 번호
+	private Long currentPage; 		// 현재페이지
+	private Long totalCount; 		// 총 레코드수
+	private Long blockCount = 10L; 	// 한 페이지에 보여줄 레코드 수
+	private Long blockPage = 5L; 	// 한 블록에 보여줄 페이지 수
+	private Long totalPage; 		// 총 페이지수
+	private Long startRow; 			// 시작 레코드 번호
+	private Long endRow; 			// 끝 레코드 번호
+	private Long startPage; 		// 한 블록의 시작 페이지 번호
+	private Long endPage; 			// 한 블록의 끝 페이지 번호
 	private Long number;
 
 	private String searchKey;
