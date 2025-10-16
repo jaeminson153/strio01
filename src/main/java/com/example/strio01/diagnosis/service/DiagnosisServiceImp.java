@@ -1,85 +1,74 @@
 package com.example.strio01.diagnosis.service;
 
-import java.io.File;
 import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.example.strio01.board.dto.PageDTO;
 import com.example.strio01.diagnosis.dto.DiagnosisDTO;
 import com.example.strio01.diagnosis.entity.DiagnosisEntity;
 import com.example.strio01.diagnosis.repository.DiagnosisRepository;
-import com.example.strio01.board.dto.PageDTO;
-
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class DiagnosisServiceImp implements DiagnosisService {
-	@Autowired
-	private DiagnosisRepository diagnosisRepository;
 
-	public DiagnosisServiceImp() {
+    @Autowired
+    private DiagnosisRepository repository;
 
-	}
+    @Transactional
+    @Override
+    public long countProcess() {
+        return repository.count();
+    }
 
-	@Transactional
-	@Override
-	public long countProcess() {
-		long cnt = diagnosisRepository.count();
-		return cnt;
-	}
+    @Transactional
+    @Override
+    public List<DiagnosisDTO> listProcess(PageDTO pv) {
+        return repository.findPagedDiagnosis(pv)
+                .stream().map(DiagnosisDTO::toDTO)
+                .collect(Collectors.toList());
+    }
 
-	@Transactional
-	@Override
-	public List<DiagnosisDTO> listProcess(PageDTO pv) {
-		List<DiagnosisEntity> listDiagnosisEntity = diagnosisRepository.findPagedDiagnosisByRownum(pv);
-		List<DiagnosisDTO> listDiagnosisDTO = listDiagnosisEntity.stream().map(DiagnosisDTO::toDTO).collect(Collectors.toList());
+    @Transactional
+    @Override
+    public void insertProcess(DiagnosisDTO dto) {
+        long newId = repository.getNextVal();
+        dto.setDiagId(newId);
+        dto.setCreatedAt(new Date(System.currentTimeMillis()));
+        DiagnosisEntity entity = dto.toEntity();
+        repository.save(entity);
+    }
 
-		return listDiagnosisDTO;
-	}
+    @Transactional
+    @Override
+    public DiagnosisDTO contentProcess(long diagId) {
+        DiagnosisEntity entity = repository.findByDiagId(diagId);
+        return DiagnosisDTO.toDTO(entity);
+    }
 
-	@Transactional
-	@Override
-	public void insertProcess(DiagnosisDTO dto) {
-		long newId = diagnosisRepository.getNextVal(); // 별도 시퀀스 조회 필요
-		dto.setDiagId(newId);
+    @Transactional
+    @Override
+    public void updateProcess(DiagnosisDTO dto) {
+        dto.setUpdatedAt(new Date(System.currentTimeMillis()));
+        repository.updateDiagnosis(dto.toEntity());
+    }
 
-		dto.setCreatedAt(new Date(System.currentTimeMillis()));
+    @Transactional
+    @Override
+    public void deleteProcess(long diagId) {
+        repository.deleteById(diagId);
+    }
 
-		DiagnosisEntity diagnosisEntity = dto.toEntity();
-		diagnosisRepository.save(diagnosisEntity);
-	}
-
-	@Transactional
-	@Override
-	public DiagnosisDTO contentProcess(long diagId) {
-
-		DiagnosisEntity diagnosisEntity = diagnosisRepository.findWithDiagnosisByDiagId(diagId);
-		return DiagnosisDTO.toDTO(diagnosisEntity);
-	}
-
-	@Transactional
-	@Override
-	public void updateProcess(DiagnosisDTO dto) {
-				
-		DiagnosisEntity diagnosisEntity = dto.toEntity();
-		diagnosisRepository.updateDiagnosis(diagnosisEntity);		
-	}
-
-	@Transactional
-	@Override
-	public void deleteProcess(long diagId) {
-		String  uploadFilename = diagnosisRepository.getUploadFilename(diagId);
-
-		diagnosisRepository.deleteById(diagId);
-	}
+    @Transactional
+    @Override
+    public List<DiagnosisDTO> findByXrayId(long xrayId) {
+        return repository.findByXrayId(xrayId)
+                .stream().map(DiagnosisDTO::toDTO)
+                .collect(Collectors.toList());
+    }
 }
-
-
-
-
-

@@ -2,19 +2,8 @@ package com.example.strio01.code.entity;
 
 import java.sql.Date;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
@@ -23,11 +12,30 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-@Table(name = "code_master")
+@IdClass(CodeId.class)
+@Table(name = "CODE_MASTER")
 public class CodeEntity {
-	@Id
-	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "board_seq_generator")
-	//@SequenceGenerator(name = "board_seq_generator", sequenceName = "board_num_seq", allocationSize = 1)
-	private String  codeGroup, codeId, codeName, codeDesc, useYn;
-	private Date createdAt, updatedAt;	
+
+    @Id
+    @Column(name = "CODE_GROUP", length = 50)
+    private String codeGroup;
+
+    @Id
+    @Column(name = "CODE_ID", length = 20)
+    private String codeId;
+
+    @Column(name = "CODE_NAME", nullable = false, length = 100)
+    private String codeName;
+
+    @Column(name = "CODE_DESC", length = 200)
+    private String codeDesc;
+
+    @Column(name = "USE_YN", length = 1)
+    private String useYn;
+
+    @Column(name = "CREATED_AT")
+    private Date createdAt;
+
+    @Column(name = "UPDATED_AT")
+    private Date updatedAt;
 }

@@ -1,7 +1,7 @@
 package  com.example.strio01.notice.dto;
 
 import java.sql.Date;
-
+import java.sql.Timestamp;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +24,8 @@ import lombok.Setter;
 public class NoticeDTO {
 	private Long noticeId;
 	private String  title, cont, userId;
-	private Date createdAt, updatedAt;
+	private Date createdAt;
+	private Timestamp updatedAt;
 	
 
 	// 클라이언트 MultipartFile 보냄 ->  DB에 저장 String 

@@ -1,15 +1,15 @@
 package com.example.strio01.diagnosis.service;
 
 import java.util.List;
-
-import com.example.strio01.diagnosis.dto.DiagnosisDTO;
 import com.example.strio01.board.dto.PageDTO;
+import com.example.strio01.diagnosis.dto.DiagnosisDTO;
 
 public interface DiagnosisService {
-	public long countProcess(); 
-	public List<DiagnosisDTO> listProcess(PageDTO pv);
-	public void insertProcess(DiagnosisDTO dto);
-	public DiagnosisDTO contentProcess(long diagnosisId);
-	public void updateProcess(DiagnosisDTO dto);
-	public void deleteProcess(long noticeId);
+    long countProcess();
+    List<DiagnosisDTO> listProcess(PageDTO pv);
+    void insertProcess(DiagnosisDTO dto);
+    DiagnosisDTO contentProcess(long diagId);
+    void updateProcess(DiagnosisDTO dto);
+    void deleteProcess(long diagId);
+    List<DiagnosisDTO> findByXrayId(long xrayId);
 }

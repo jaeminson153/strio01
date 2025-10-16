@@ -1,120 +1,71 @@
 package com.example.strio01.diagnosis.controller;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.strio01.diagnosis.dto.DiagnosisDTO;
 import com.example.strio01.board.dto.PageDTO;
-import com.example.strio01.diagnosis.repository.DiagnosisRepository;
+import com.example.strio01.diagnosis.dto.DiagnosisDTO;
 import com.example.strio01.diagnosis.service.DiagnosisService;
-import com.example.strio01.common.file.FileUpload;
-
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import oracle.jdbc.proxy.annotation.GetProxy;
-
-
-//@CrossOrigin("*")
 
 @Slf4j
 @RestController
+@RequestMapping("/diagnosis")
 public class DiagnosisController {
 
-    private final DiagnosisRepository diagnosisRepository;
     @Autowired
-	private DiagnosisService diagnosisService;
-    
-    private int currentPage;
-    private PageDTO pdto;
-   
-    
-    public DiagnosisController(DiagnosisRepository diagnosisRepository) {
-        this.diagnosisRepository = diagnosisRepository;
+    private DiagnosisService service;
 
-    }
-    
-    // http://localhost:8090/notice/list/1
-    @GetMapping(value="/notice/list/{currentPage}")
-    public ResponseEntity<Map<String, Object>> listExecute(@PathVariable("currentPage") int currentPage){
+    // 전체 리스트 (페이징)
+    @GetMapping("/list/{page}")
+    public ResponseEntity<Map<String, Object>> list(@PathVariable("page") int page) {
+        long total = service.countProcess();
         Map<String, Object> map = new HashMap<>();
-        
-    	long totalRecord = diagnosisService.countProcess();
-    	log.info("totalRecord: {}", totalRecord);
-
-    	
-    	if(totalRecord >=1) {
-    		this.currentPage = currentPage;
-    		this.pdto = new PageDTO(this.currentPage, totalRecord);
-    		
-    		map.put("noticeList", diagnosisService.listProcess(pdto));
-    		map.put("pv", this.pdto);    		
-    	}
-    	return ResponseEntity.ok().body(map);
-    }//end listExecute()///////////////////////////////////////////////////////////////
-    
-    //첨부파일이 있을 때 @RequestBody을 선언하면 안된다.
-    //답변글일때 ref, reStep, reLevel 담아서 넘겨야 한다.
-    @PostMapping("/notice/write")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<String> writeProExecute(DiagnosisDTO dto, HttpServletRequest req){
-            
-    	diagnosisService.insertProcess(dto);    	
-    	return ResponseEntity.ok(String.valueOf(1));
-    }//end writeProExecute()//////////////////////////////////////////////////////    
-  
-    @GetMapping(value="/notice/view/{num}")
-    public ResponseEntity<DiagnosisDTO> viewExecute(@PathVariable("num") Long num){
-    	DiagnosisDTO noticeDTO = diagnosisService.contentProcess(num);
-    	return ResponseEntity.ok(noticeDTO);
+        if (total > 0) {
+            PageDTO pv = new PageDTO(page, total);
+            map.put("diagnosisList", service.listProcess(pv));
+            map.put("pv", pv);
+        }
+        return ResponseEntity.ok(map);
     }
-    
-    @PutMapping(value="/notice/update")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<Void> updateExecute(DiagnosisDTO dto, HttpServletRequest req){
 
-    	diagnosisService.updateProcess(dto);
-    	return ResponseEntity.ok(null);
+    // 단건 조회
+    @GetMapping("/view/{id}")
+    public ResponseEntity<DiagnosisDTO> view(@PathVariable("id") long id) {
+        DiagnosisDTO dto = service.contentProcess(id);
+        return ResponseEntity.ok(dto);
     }
-    
-    @DeleteMapping(value="/notice/delete/{num}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<Void> deleteExecute(@PathVariable("num") Long num){
-    	diagnosisService.deleteProcess(num);
-    	return ResponseEntity.ok(null);
+
+    // X-ray별 진단 조회
+    @GetMapping("/xray/{xrayId}")
+    public ResponseEntity<List<DiagnosisDTO>> findByXray(@PathVariable("xrayId") long xrayId) {
+        return ResponseEntity.ok(service.findByXrayId(xrayId));
     }
-    
-    
-}//end class
 
+    // 진단 등록 (의사 입력)
+    @PostMapping("/write")
+    @PreAuthorize("hasAnyRole('DOCTOR','ADMIN')")
+    public ResponseEntity<String> write(@RequestBody DiagnosisDTO dto) {
+        service.insertProcess(dto);
+        return ResponseEntity.ok("1");
+    }
 
+    // 진단 수정 (의사 소견 수정)
+    @PutMapping("/update")
+    @PreAuthorize("hasAnyRole('DOCTOR','ADMIN')")
+    public ResponseEntity<Void> update(@RequestBody DiagnosisDTO dto) {
+        service.updateProcess(dto);
+        return ResponseEntity.ok().build();
+    }
 
-
-
-
-
-
-
-
-
+    // 진단 삭제 (관리자 전용)
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
+        service.deleteProcess(id);
+        return ResponseEntity.ok().build();
+    }
+}

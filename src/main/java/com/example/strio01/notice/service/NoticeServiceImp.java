@@ -65,32 +65,16 @@ public class NoticeServiceImp implements NoticeService {
 	@Transactional
 	@Override
 	public void updateProcess(NoticeDTO dto, String tempDir) {
-		String filename = dto.getUpload();
-		// 수정할 첨부파일이 있으면
-		if (filename != null) {
-			String uploadFilename = noticeRepository.getUploadFilename(dto.getNoticeId());
-			// 기존에 저장된 첨부파일 있으면
-			if (uploadFilename != null) {
-				File file = new File(tempDir, uploadFilename);
-				file.delete();
-			}
-		}
-		
-		NoticeEntity noticeEntity = dto.toEntity();
-		noticeRepository.updateNotice(noticeEntity);		
+	    // 업로드 컬럼이 없으므로 파일 삭제 관련 로직 제거
+	    NoticeEntity noticeEntity = dto.toEntity();
+	    noticeRepository.updateNotice(noticeEntity);
 	}
 
 	@Transactional
 	@Override
 	public void deleteProcess(long noticeId, String tempDir) {
-		String  uploadFilename = noticeRepository.getUploadFilename(noticeId);
-		
-		//파일 첨부가 있으면
-		if(uploadFilename != null) {
-			File file = new File(tempDir, uploadFilename);
-			file.delete();
-		}
-		noticeRepository.deleteById(noticeId);
+	    // 파일첨부 없음 → 바로 DB에서 삭제
+	    noticeRepository.deleteById(noticeId);
 	}
 }
 

@@ -126,27 +126,7 @@ public class NoticeController {
     	return ResponseEntity.ok(null);
     }
     
-    // http://localhost:8090/notice/contentdownload/167b7f60-e2e6-4bba-917d-860b6df1ce04_자바 db연결.txt
-    @GetMapping(value="/notice/contentdownload/{filename}")
-    public ResponseEntity<Resource> downloadExecute(@PathVariable("filename") String filename) throws IOException{
-    	String fileName = filename.substring(filename.indexOf("_")+1); 
-    	
-    	//파일명이 한글일때 인코딩 작업을 한다.
-    	String str = URLEncoder.encode(fileName, "UTF-8");
-    	log.info("str => {}", str);
-    	
-    	//원본파일명에 공백이 있을 때, "+"표시가 되므로 공백으로 처리해줌
-    	str = str.replaceAll("\\+", "%20");
-    	
-    	Path path = Paths.get(tempDir+"\\"+filename);
-    	Resource  resource = new InputStreamResource(Files.newInputStream(path));
-    	//log.info("resource => {}", resource.contentLength());
-    	HttpHeaders  headers= new HttpHeaders();
-    	headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
-    	headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="+str+";");
-    	
-    	return ResponseEntity.ok().headers(headers).body(resource);
-    }
+    
 }//end class
 
 

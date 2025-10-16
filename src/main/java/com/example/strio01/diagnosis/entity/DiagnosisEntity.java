@@ -1,34 +1,44 @@
 package com.example.strio01.diagnosis.entity;
 
 import java.sql.Date;
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Setter
 @Getter
+@ToString
 @Entity
-@Table(name = "diagnosis")
+@Table(name = "DIAGNOSIS")
 public class DiagnosisEntity {
-	@Id
-	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "board_seq_generator")
-	//@SequenceGenerator(name = "board_seq_generator", sequenceName = "board_num_seq", allocationSize = 1)
-	private Long diagId, xrayId;
-	private String  doctorId, aiResult, aiImpression,doctorResult,doctorImpression;
-	private Date createdAt, updatedAt;
+
+    @Id
+    @Column(name = "DIAG_ID")
+    private Long diagId;
+
+    @Column(name = "XRAY_ID", nullable = false)
+    private Long xrayId;
+
+    @Column(name = "DOCTOR_ID", nullable = false, length = 50)
+    private String doctorId;
+
+    @Column(name = "AI_RESULT", length = 200)
+    private String aiResult;
+
+    @Column(name = "AI_IMPRESSION", length = 4000)
+    private String aiImpression;
+
+    @Column(name = "DOCTOR_RESULT", nullable = false, length = 200)
+    private String doctorResult;
+
+    @Column(name = "DOCTOR_IMPRESSION", length = 4000)
+    private String doctorImpression;
+
+    @Column(name = "CREATED_AT")
+    private Date createdAt;
+
+    @Column(name = "UPDATED_AT")
+    private Date updatedAt;
 }

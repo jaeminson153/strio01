@@ -1,7 +1,7 @@
 package com.example.strio01.notice.entity;
 
 import java.sql.Date;
-
+import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,5 +30,6 @@ public class NoticeEntity {
 	//@SequenceGenerator(name = "board_seq_generator", sequenceName = "board_num_seq", allocationSize = 1)
 	private Long noticeId;
 	private String  title, cont, userId;
-	private Date createdAt, updatedAt;	
+	private Date createdAt;
+	private Timestamp updatedAt;
 }
