@@ -52,7 +52,7 @@ public class AdminController {
     @DeleteMapping(value="/admin/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization-refresh") String refreshToken){
     	String email = JWT.require(Algorithm.HMAC512("mySecurityCos")).build().verify(refreshToken).getClaim("memberEmail").asString();
-    	log.info("============= ::::: email::::::{}",email);
+    	log.info("=========== ::::: email::::::{}",email);
     	authService.deleteRefreshToken(email);
     	return ResponseEntity.ok(Map.of("message","로그아웃완료"));
     }
