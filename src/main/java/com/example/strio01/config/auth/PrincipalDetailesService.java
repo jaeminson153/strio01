@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 //import com.example.strio01.members.dto.AuthInfo;
 //import com.example.strio01.members.entity.MembersEntity;
 //import com.example.strio01.members.repository.MembersRepository;
-import com.example.strio01.admin.dto.AuthInfo;
-import com.example.strio01.admin.entity.AdminEntity;
-import com.example.strio01.admin.repository.AdminRepository;
+import com.example.strio01.user.dto.AuthInfo;
+import com.example.strio01.user.entity.UserInfoEntity;
+import com.example.strio01.user.repository.UserInfoRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PrincipalDetailesService implements UserDetailsService {
 
 	@Autowired
-	private AdminRepository adminRepository;
+	private UserInfoRepository adminRepository;
 
 	// 1. AuthenticationProvider에서 loadUserByUsername(String memberEmail)을 호출한다.
 	// 2. loadUserByUsername(String adminId)에서는 DB에서 adminId에 해당하는 데이터를 검색해서
@@ -34,13 +34,13 @@ public class PrincipalDetailesService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		log.info("PrincipalDetailesService => loadUserByUsername() => adminId:{}", userId);
 		
-		Optional<AdminEntity> optMembersEntity = adminRepository.findById(userId);
+		Optional<UserInfoEntity> optMembersEntity = adminRepository.findById(userId);
 		
 		if(optMembersEntity.isEmpty()) {
 			throw new UsernameNotFoundException(userId + "사용자명이 존재하지 않습니다.");
 		}
 		
-		AdminEntity adminEntity = optMembersEntity.get();
+		UserInfoEntity adminEntity = optMembersEntity.get();
 		log.info("adminId:{} pwd:{} name:{} ",  adminEntity.getUserId(), adminEntity.getPasswd(),adminEntity.getUserName());
 		
 		AuthInfo authInfo = AuthInfo.builder()

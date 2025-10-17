@@ -13,9 +13,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.strio01.admin.dto.AdminDTO;
-import com.example.strio01.admin.dto.AuthInfo;
-import com.example.strio01.admin.service.AuthService;
+//import com.example.strio01.admin.dto.AdminDTO;
+//import com.example.strio01.admin.dto.AuthInfo;
+//import com.example.strio01.admin.service.AuthService;
+import com.example.strio01.user.dto.UserInfoDTO;
+import com.example.strio01.user.dto.AuthInfo;
+import com.example.strio01.user.service.AuthService;
+
 import com.example.strio01.config.auth.PrincipalDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -58,7 +62,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			//{"memberEmail": "dong@google.com", "memberPass":"1234"}
 			// 스트림을 통해서 읽어온 json을 MembersdTO 객체로 변경한다.
 			ObjectMapper om = new ObjectMapper();
-			AdminDTO adminDTO = om.readValue(request.getInputStream(), AdminDTO.class);
+			UserInfoDTO adminDTO = om.readValue(request.getInputStream(), UserInfoDTO.class);
 			log.info("adminId:{}, memberPass:{}", adminDTO.getUserId(), adminDTO.getPasswd());
 			
 			UsernamePasswordAuthenticationToken authenticationToken 
