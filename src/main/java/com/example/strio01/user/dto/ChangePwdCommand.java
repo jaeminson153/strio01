@@ -1,4 +1,4 @@
-package com.example.strio01.admin.dto;
+package com.example.strio01.user.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,4 +11,3 @@ public class ChangePwdCommand {
 	private String currentPassword;
 	private String newPassword;	
 }
-

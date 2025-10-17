@@ -16,8 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.example.strio01.admin.repository.AdminRepository;
-import com.example.strio01.admin.service.AuthService;
+import com.example.strio01.user.repository.UserInfoRepository;
+import com.example.strio01.user.service.AuthService;
 import com.example.strio01.config.jwt.JwtAuthenticationFilter;
 import com.example.strio01.config.jwt.JwtAuthorizationFilter;
 import com.example.strio01.config.jwt.JwtTokenProvider;
@@ -37,7 +37,7 @@ public class SecurityConfig {
 
 
 	@Autowired
-	private AdminRepository adminRepository;
+	private UserInfoRepository adminRepository;
 
 
 	// @Autowired

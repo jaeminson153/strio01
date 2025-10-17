@@ -1,4 +1,4 @@
-package com.example.strio01.admin.entity;
+package com.example.strio01.user.entity;
 
 import java.time.LocalDateTime;
 
