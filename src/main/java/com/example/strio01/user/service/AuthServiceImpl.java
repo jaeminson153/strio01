@@ -1,12 +1,12 @@
-package com.example.strio01.admin.service;
+package com.example.strio01.user.service;
 
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.strio01.admin.entity.AdminRefreshTokenEntity;
-import com.example.strio01.admin.repository.AdminRefreshTokenRepository;
+import com.example.strio01.user.entity.AdminRefreshTokenEntity;
+import com.example.strio01.user.repository.AdminRefreshTokenRepository;
 
 
 import lombok.RequiredArgsConstructor;

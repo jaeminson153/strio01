@@ -13,9 +13,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.strio01.config.auth.PrincipalDetails;
-import com.example.strio01.admin.dto.AuthInfo;
-import com.example.strio01.admin.entity.AdminEntity;
-import com.example.strio01.admin.repository.AdminRepository;
+import com.example.strio01.user.dto.AuthInfo;
+import com.example.strio01.user.entity.UserInfoEntity;
+import com.example.strio01.user.repository.UserInfoRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,9 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-	private AdminRepository adminRepository;
+	private UserInfoRepository adminRepository;
 
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, AdminRepository adminRepository) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserInfoRepository adminRepository) {
 		super(authenticationManager);
 		this.adminRepository = adminRepository;
 	}
@@ -68,8 +68,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		if (username != null) {
 			// spring security가 수행해주는 권한 처리를 위해 아래와 같이 토큰을 만들어
 			// Authentication객체를 강제로 만들고 세션에 넣어준다.
-			Optional<AdminEntity> optMembersEntity = adminRepository.findById(username);
-			AdminEntity adminEntity = optMembersEntity.get();
+			Optional<UserInfoEntity> optMembersEntity = adminRepository.findById(username);
+			UserInfoEntity adminEntity = optMembersEntity.get();
 			log.info("************{}", adminEntity.getUserId());
 			AuthInfo authInfo = new AuthInfo(adminEntity.getUserId(), adminEntity.getPasswd(), adminEntity.getUserName());
 			PrincipalDetails principalDetails = new PrincipalDetails(authInfo);
