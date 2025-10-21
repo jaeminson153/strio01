@@ -1,5 +1,6 @@
 package com.example.strio01.user.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/user")
 @CrossOrigin("*")
 public class UserInfoController {
 
@@ -45,18 +45,28 @@ public class UserInfoController {
 
     public UserInfoController() {}
 
+    
+    // http://localhost:8090/league/list
+    @GetMapping(value="/member/list")
+    public ResponseEntity<Map<String, Object>> listExecute(){
+        Map<String, Object> map = new HashMap<>();
+ 		
+   		map.put("merberList", userInfoService.listAllUsers());
+
+    	return ResponseEntity.ok().body(map);
+    }//end listExecute()//////    
+    
     // ✅ 회원가입
-    @PostMapping("/signup")
+    @PostMapping("member/signup")
     public ResponseEntity<AuthInfo> signup(@RequestBody UserInfoDTO dto) {
         dto.setPasswd(passwordEncoder.encode(dto.getPasswd()));
         AuthInfo authInfo = userInfoService.createUserProcess(dto);
         return ResponseEntity.ok(authInfo);
     }
-
    
 
     // ✅ 단일 사용자 조회
-    @GetMapping("/{userId}")
+    @GetMapping("member/{userId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserInfoDTO> getUser(@PathVariable("userId") String userId,
                                                @AuthenticationPrincipal PrincipalDetails principal) {
@@ -66,7 +76,7 @@ public class UserInfoController {
     }
 
     // ✅ 회원 정보 수정
-    @PutMapping("/update")
+    @PutMapping("member/update")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<AuthInfo> updateUser(@RequestBody UserInfoDTO dto) {
         dto.setPasswd(passwordEncoder.encode(dto.getPasswd()));
@@ -75,7 +85,7 @@ public class UserInfoController {
     }
 
     // ✅ 회원 삭제
-    @DeleteMapping("/delete/{userId}")
+    @DeleteMapping("member/delete/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<Void> deleteUser(@PathVariable("userId") String userId) {
         log.info("회원 삭제 요청: {}", userId);
@@ -85,7 +95,7 @@ public class UserInfoController {
 
     // ✅ 로그아웃
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @DeleteMapping("/logout")
+    @DeleteMapping("member/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization-refresh") String refreshToken) {
         String userId = JWT.require(Algorithm.HMAC512("mySecurityCos"))
                 .build()
