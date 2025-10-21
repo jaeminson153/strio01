@@ -108,6 +108,27 @@ public class UserInfoServiceImp implements UserInfoService {
                 .roleCd(existing.getRoleCd())
                 .build();
     }
+    
+    @Override
+    public AuthInfo updateUserRoleProcess(UserInfoDTO dto) {
+        Optional<UserInfoEntity> optEntity = userInfoRepository.findById(dto.getUserId());
+        if (optEntity.isEmpty()) {
+            return null;
+        }
+
+        UserInfoEntity entity = optEntity.get();
+        entity.setRoleCd(dto.getRoleCd()); 			// 역할만 수정
+        entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
+        userInfoRepository.save(entity);
+
+        return AuthInfo.builder()
+                .userId(entity.getUserId())
+                .userName(entity.getUserName())
+                .roleCd(entity.getRoleCd())
+                .build();
+    }
+    
 
     // ✅ 회원 삭제
     @Transactional
