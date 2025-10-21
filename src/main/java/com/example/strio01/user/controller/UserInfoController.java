@@ -50,14 +50,13 @@ public class UserInfoController {
     @GetMapping(value="/member/list")
     public ResponseEntity<Map<String, Object>> listExecute(){
         Map<String, Object> map = new HashMap<>();
- 		
    		map.put("merberList", userInfoService.listAllUsers());
 
     	return ResponseEntity.ok().body(map);
     }//end listExecute()//////    
     
-    // ✅ 회원가입
-    @PostMapping("member/signup")
+    // 회원가입
+    @PostMapping("/member/signup")
     public ResponseEntity<AuthInfo> signup(@RequestBody UserInfoDTO dto) {
         dto.setPasswd(passwordEncoder.encode(dto.getPasswd()));
         AuthInfo authInfo = userInfoService.createUserProcess(dto);
@@ -65,8 +64,8 @@ public class UserInfoController {
     }
    
 
-    // ✅ 단일 사용자 조회
-    @GetMapping("member/{userId}")
+    // 단일 사용자 조회
+    @GetMapping("/member/{userId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserInfoDTO> getUser(@PathVariable("userId") String userId,
                                                @AuthenticationPrincipal PrincipalDetails principal) {
@@ -75,27 +74,46 @@ public class UserInfoController {
         return ResponseEntity.ok(userDTO);
     }
 
-    // ✅ 회원 정보 수정
-    @PutMapping("member/update")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    // 회원 정보 수정
+    @PutMapping("/member/update")
     public ResponseEntity<AuthInfo> updateUser(@RequestBody UserInfoDTO dto) {
         dto.setPasswd(passwordEncoder.encode(dto.getPasswd()));
         AuthInfo authInfo = userInfoService.updateUserProcess(dto);
         return ResponseEntity.ok(authInfo);
     }
+    
+    // 회원 롤정보 수정 (2025.10.22)
+    @PutMapping("/member/updateRole")
+    public ResponseEntity<AuthInfo> updateUserRole(@RequestBody UserInfoDTO dto) {
+        log.info("===> [회원 역할 수정 요청] userId={}, roleCd={}", dto.getUserId(), dto.getRoleCd());
 
-    // ✅ 회원 삭제
-    @DeleteMapping("member/delete/{userId}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+        // ✅ 비밀번호 암호화 제거: 역할만 수정
+        AuthInfo authInfo = userInfoService.updateUserRoleProcess(dto);
+
+        if (authInfo != null) {
+            log.info("===> [회원 역할 수정 완료] userId={}, newRole={}", dto.getUserId(), dto.getRoleCd());
+            return ResponseEntity.ok(authInfo);
+        } else {
+            log.warn("===> [회원 역할 수정 실패] userId={}", dto.getUserId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(AuthInfo.builder()
+                            .userId(dto.getUserId())
+                            .roleCd(dto.getRoleCd())
+                            .build());
+        }
+    }
+ 
+
+    // 회원 삭제 (2025.10.21 완료)
+    @DeleteMapping("/member/delete/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable("userId") String userId) {
-        log.info("회원 삭제 요청: {}", userId);
         userInfoService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
-    // ✅ 로그아웃
+    // 로그아웃
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @DeleteMapping("member/logout")
+    @DeleteMapping("/member/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization-refresh") String refreshToken) {
         String userId = JWT.require(Algorithm.HMAC512("mySecurityCos"))
                 .build()
@@ -107,7 +125,7 @@ public class UserInfoController {
         return ResponseEntity.ok(Map.of("message", "로그아웃 완료"));
     }
 
-    // ✅ 토큰 재발급
+    // 토큰 재발급
     @PostMapping("/auth/refresh")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = request.getHeader("Authorization-refresh");

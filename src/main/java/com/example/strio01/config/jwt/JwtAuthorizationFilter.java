@@ -48,6 +48,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 		// Header가 비어 있거나, 비어있지 않지만 "Bearer" 방식이 아니면 반환한다.
 		// JWT 토큰 검증을 해서 정상적인 사용자인 확인 => 정상적인 요청이 아닌 경우
 		if (accessToken == null || !accessToken.startsWith("Bearer")) {
+			System.out.println("==============================::7:::2 1===");
 			chain.doFilter(request, response);
 			return;
 		}
