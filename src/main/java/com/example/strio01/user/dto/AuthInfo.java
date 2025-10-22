@@ -19,4 +19,12 @@ public class AuthInfo {
     	this.passwd = passwd;
     	this.userName = userName;
     }
+    
+    public AuthInfo(String userId, String passwd, String userName, String roleCd) {
+    	this.userId = userId;
+    	this.passwd = passwd;
+    	this.userName = userName;
+    	this.roleCd = roleCd;
+    }
+    
 }
