@@ -58,7 +58,7 @@ public class UserInfoController {
     // 회원가입
     @PostMapping("/member/signup")
     public ResponseEntity<AuthInfo> signup(@RequestBody UserInfoDTO dto) {
-        dto.setPasswd(passwordEncoder.encode(dto.getPasswd()));
+    	//dto.setPasswd(passwordEncoder.encode(dto.getPasswd())); ////// 2025.10.22 jaemin AutoInfo 에서 암호화 처리하므로 여기서는 제외한다. 
         AuthInfo authInfo = userInfoService.createUserProcess(dto);
         return ResponseEntity.ok(authInfo);
     }
@@ -112,7 +112,7 @@ public class UserInfoController {
     }
 
     // 로그아웃
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    //PreAuthorize("hasAnyRole('ADMIN','USER')")
     @DeleteMapping("/member/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization-refresh") String refreshToken) {
         String userId = JWT.require(Algorithm.HMAC512("mySecurityCos"))

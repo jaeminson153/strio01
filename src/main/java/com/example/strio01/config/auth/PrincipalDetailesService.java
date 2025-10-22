@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 //import com.example.strio01.members.dto.AuthInfo;
@@ -33,7 +34,7 @@ public class PrincipalDetailesService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		log.info("PrincipalDetailesService => loadUserByUsername() => adminId:{}", userId);
-		
+		System.out.println("====== login ======: 2");
 		Optional<UserInfoEntity> optMembersEntity = adminRepository.findById(userId);
 		
 		if(optMembersEntity.isEmpty()) {
@@ -41,12 +42,13 @@ public class PrincipalDetailesService implements UserDetailsService {
 		}
 		
 		UserInfoEntity adminEntity = optMembersEntity.get();
-		log.info("adminId:{} pwd:{} name:{} ",  adminEntity.getUserId(), adminEntity.getPasswd(),adminEntity.getUserName());
-		
+		log.info("adminId:{} pwd:{} name:{} role:{}",  adminEntity.getUserId(), adminEntity.getPasswd(),adminEntity.getUserName(),adminEntity.getRoleCd());
+		System.out.println("====== login ======: 3");
 		AuthInfo authInfo = AuthInfo.builder()
 				.userId(adminEntity.getUserId())
 				.passwd(adminEntity.getPasswd())
-				.userName(adminEntity.getUserName())				
+				.userName(adminEntity.getUserName())
+				.roleCd(adminEntity.getRoleCd())
 				.build();
 		return new PrincipalDetails(authInfo);
 	}

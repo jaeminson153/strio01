@@ -67,9 +67,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			
 			UsernamePasswordAuthenticationToken authenticationToken 
 			 = new UsernamePasswordAuthenticationToken(adminDTO.getUserId(), adminDTO.getPasswd());
-			
+			System.out.println("====== login ======: 1");
 			authentication = authManager.authenticate(authenticationToken);
-			
+			System.out.println("====== login ======: 6");
 			log.info("authentication: {}", authentication.getPrincipal());
 			
 			PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();			
@@ -89,7 +89,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {		
 		log.info("successfulAuthentication 실행됨");
-		
+		 System.out.println("====== login ======: 4");	
 		 PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 		 AuthInfo authInfo = principalDetails.getAuthInfo(); 
 		    
@@ -120,8 +120,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		response.setHeader("Access-Control-Expose-Headers", "Authorization, Authorization-refresh");
 		
 		final Map<String, Object> body = new HashMap<>();
-		body.put("name", principalDetails.getAuthInfo().getUserName());
-		body.put("adminId", principalDetails.getAuthInfo().getUserId());
+		body.put("userName", principalDetails.getAuthInfo().getUserName());
+		body.put("userId", principalDetails.getAuthInfo().getUserId());
+		body.put("roleCd", principalDetails.getAuthInfo().getRoleCd());
 		//body.put("authRole", principalDetails.getAuthInfo().getAuthRole());
 		// body.put("accessToken", accessToken);
 		// body.put("refreshToken", refreshToken);
