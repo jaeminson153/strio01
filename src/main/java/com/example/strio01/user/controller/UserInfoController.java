@@ -77,10 +77,18 @@ public class UserInfoController {
     // 회원 정보 수정
     @PutMapping("/member/update")
     public ResponseEntity<AuthInfo> updateUser(@RequestBody UserInfoDTO dto) {
-        dto.setPasswd(passwordEncoder.encode(dto.getPasswd()));
+        //dto.setPasswd(passwordEncoder.encode(dto.getPasswd()));
         AuthInfo authInfo = userInfoService.updateUserProcess(dto);
         return ResponseEntity.ok(authInfo);
     }
+    
+    // 회원 정보 수정
+    @PutMapping("/member/updatePasswd")
+    public ResponseEntity<AuthInfo> updatePasswd(@RequestBody UserInfoDTO dto) {
+        //dto.setPasswd(passwordEncoder.encode(dto.getPasswd()));
+        AuthInfo authInfo = userInfoService.updateUserPasswd(dto);
+        return ResponseEntity.ok(authInfo);
+    }    
     
     // 회원 롤정보 수정 (2025.10.22)
     @PutMapping("/member/updateRole")

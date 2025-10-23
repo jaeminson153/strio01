@@ -9,9 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-//import com.example.strio01.members.dto.AuthInfo;
-//import com.example.strio01.members.entity.MembersEntity;
-//import com.example.strio01.members.repository.MembersRepository;
 import com.example.strio01.user.dto.AuthInfo;
 import com.example.strio01.user.entity.UserInfoEntity;
 import com.example.strio01.user.repository.UserInfoRepository;

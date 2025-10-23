@@ -13,9 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-//import com.example.strio01.admin.dto.AdminDTO;
-//import com.example.strio01.admin.dto.AuthInfo;
-//import com.example.strio01.admin.service.AuthService;
 import com.example.strio01.user.dto.UserInfoDTO;
 import com.example.strio01.user.dto.AuthInfo;
 import com.example.strio01.user.service.AuthService;

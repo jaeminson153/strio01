@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-//import com.example.strio01.members.dto.AuthInfo; //// old
 import com.example.strio01.user.dto.AuthInfo;
 import lombok.extern.slf4j.Slf4j;
 
