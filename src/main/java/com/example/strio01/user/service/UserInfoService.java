@@ -23,6 +23,7 @@ public interface UserInfoService {
 
     // 회원정보 수정
     AuthInfo updateUserProcess(UserInfoDTO dto);
+    AuthInfo updateUserPasswd(UserInfoDTO dto);
     
     // UserInfoService.java
     AuthInfo updateUserRoleProcess(UserInfoDTO dto);

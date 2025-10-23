@@ -20,13 +20,13 @@ public class AuthInfo {
     	this.passwd = passwd;
     	this.userName = userName;
     }
-    
+   /* 
     public AuthInfo(String userId, String passwd, String userName, String roleCd) {
     	this.userId = userId;
     	this.passwd = passwd;
     	this.userName = userName;
     	this.roleCd = roleCd;
-    }
+    }*/
         
     public AuthInfo(String userId, String passwd, String userName, String roleCd, String email) {
     	this.userId = userId;
@@ -34,6 +34,13 @@ public class AuthInfo {
     	this.userName = userName;
     	this.roleCd = roleCd;
     	this.email = email;
-    }    
+    }   
+    
+    public AuthInfo(String userId, String userName, String roleCd, String email) {
+    	this.userId = userId;
+    	this.userName = userName;
+    	this.roleCd = roleCd;
+    	this.email = email;
+    }     
     
 }

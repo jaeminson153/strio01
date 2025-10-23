@@ -92,13 +92,13 @@ public class UserInfoServiceImp implements UserInfoService {
 
         existing.setUserName(dto.getUserName());
         existing.setEmail(dto.getEmail());
-        existing.setRoleCd(dto.getRoleCd());
+        //existing.setRoleCd(dto.getRoleCd());
         existing.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
         // 비밀번호 변경 시 암호화 처리
-        if (dto.getPasswd() != null && !dto.getPasswd().isEmpty()) {
-            existing.setPasswd(passwordEncoder.encode(dto.getPasswd()));
-        }
+        //if (dto.getPasswd() != null && !dto.getPasswd().isEmpty()) {
+        //    existing.setPasswd(passwordEncoder.encode(dto.getPasswd()));
+        //}
 
         userInfoRepository.save(existing);
 
@@ -106,8 +106,44 @@ public class UserInfoServiceImp implements UserInfoService {
                 .userId(existing.getUserId())
                 .userName(existing.getUserName())
                 .roleCd(existing.getRoleCd())
+                .email(existing.getEmail())
                 .build();
     }
+    
+    // 회원비번 수정
+    @Transactional
+    @Override
+    public AuthInfo updateUserPasswd(UserInfoDTO dto) {
+        UserInfoEntity existing = userInfoRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new RuntimeException("수정할 사용자가 존재하지 않습니다."));
+        
+        // 기존 비밀번호 검증
+        if (dto.getPasswd() == null || dto.getPasswd().isEmpty()) {
+            throw new RuntimeException("현재 비밀번호를 입력해주세요.");
+        }
+
+        if (!passwordEncoder.matches(dto.getPasswd(), existing.getPasswd())) {
+            throw new RuntimeException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 새 비밀번호 유효성 검사
+        if (dto.getNewPasswd() == null || dto.getNewPasswd().isEmpty()) {
+            throw new RuntimeException("새 비밀번호를 입력해주세요.");
+        }
+        
+        existing.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        existing.setPasswd(passwordEncoder.encode(dto.getNewPasswd()));
+
+        userInfoRepository.save(existing);
+
+        return AuthInfo.builder()
+                .userId(existing.getUserId())
+                .userName(existing.getUserName())
+                .roleCd(existing.getRoleCd())
+                .email(existing.getEmail())
+                .build();
+    }    
+    
     
     @Override
     public AuthInfo updateUserRoleProcess(UserInfoDTO dto) {
