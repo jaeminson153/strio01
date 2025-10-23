@@ -79,8 +79,7 @@ public class NoticeController {
     
     //첨부파일이 있을 때 @RequestBody을 선언하면 안된다.
     //답변글일때 ref, reStep, reLevel 담아서 넘겨야 한다.
-    @PostMapping("/notice/write")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PostMapping("/notice/write")    
     public ResponseEntity<String> writeProExecute(NoticeDTO dto, HttpServletRequest req){
     	MultipartFile file = dto.getFilename();
     	log.info("file => {}", file);

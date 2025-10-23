@@ -45,11 +45,35 @@ public class UserInfoServiceImp implements UserInfoService {
                 .map(UserInfoDTO::toDTO)
                 .orElse(null);
     }
+    
+    // 아이디 찾기
+    @Transactional
+    @Override
+    public UserInfoDTO getUserId(UserInfoDTO dto) {
+        return userInfoRepository.findByUserNameAndEmail(dto.getUserName(),dto.getEmail())
+                .map(UserInfoDTO::toDTO)
+                .orElse(null);
+    }    
+    
+    // 비밀번호 찾기를 위한 회원정보 확인
+    @Transactional
+    @Override
+    public UserInfoDTO getUserInfo(UserInfoDTO dto) {
+        return userInfoRepository.findByUserIdAndEmail(dto.getUserId(),dto.getEmail())
+                .map(UserInfoDTO::toDTO)
+                .orElse(null);
+    }     
 
     // ✅ 회원가입 처리
     @Transactional
     @Override
     public AuthInfo createUserProcess(UserInfoDTO dto) {
+    	
+        boolean exists = userInfoRepository.existsById(dto.getUserId());
+        if (exists) {
+            throw new RuntimeException("이미 존재하는 아이디입니다.");
+        }
+        
         dto.setPasswd(passwordEncoder.encode(dto.getPasswd()));
         dto.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         dto.setUpdatedAt(new Timestamp(System.currentTimeMillis()));

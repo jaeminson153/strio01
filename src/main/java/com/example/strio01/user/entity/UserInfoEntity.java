@@ -1,6 +1,8 @@
 package com.example.strio01.user.entity;
 
 import java.sql.Timestamp;
+import java.util.Optional;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,4 +37,6 @@ public class UserInfoEntity {
 
     @Column(name = "UPDATED_AT")
     private Timestamp updatedAt;
+
+
 }

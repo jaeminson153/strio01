@@ -20,6 +20,7 @@ import com.example.strio01.user.dto.AuthInfo;
 import com.example.strio01.user.dto.UserInfoDTO;
 import com.example.strio01.user.entity.UserInfoEntity;
 import com.example.strio01.user.service.AuthService;
+import com.example.strio01.user.service.MailService;
 import com.example.strio01.user.service.UserInfoService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,6 +43,9 @@ public class UserInfoController {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    
+    @Autowired
+    private MailService mailService;    
 
     public UserInfoController() {}
 
@@ -73,7 +77,45 @@ public class UserInfoController {
         UserInfoDTO userDTO = userInfoService.getUser(userId);
         return ResponseEntity.ok(userDTO);
     }
+    
+    // 아이디 찾기
+    @PostMapping("/member/findId")
+    public ResponseEntity<?> getUserId(@RequestBody UserInfoDTO dto) {
+        UserInfoDTO userDTO = userInfoService.getUserId(dto);
 
+        if (userDTO == null) {
+            Map<String, Object> errorBody = new HashMap<>();
+            errorBody.put("message", "입력하신 이름과 이메일로 일치하는 회원이 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
+        }
+
+        return ResponseEntity.ok(userDTO);
+    }   
+
+    // 비밀번호 수정링크
+    @PostMapping("/member/findPasswd")
+    public ResponseEntity<?> getPasswd(@RequestBody UserInfoDTO dto) {
+        UserInfoDTO userDTO = userInfoService.getUserInfo(dto);
+
+        if (userDTO == null) {
+            Map<String, Object> errorBody = new HashMap<>();
+            errorBody.put("message", "입력하신 아이디와 이메일로 일치하는 회원이 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
+        }
+
+        // 비밀번호 재설정 링크 생성
+        String resetToken = java.util.UUID.randomUUID().toString();
+        String resetLink = "http://localhost:3000/reset-password?token=" + resetToken + "&userId=" + userDTO.getUserId();
+
+        // 메일 전송
+        //mailService.sendPasswordResetMail(userDTO.getEmail(), resetLink);
+
+        Map<String, Object> successBody = new HashMap<>();
+        successBody.put("message", "비밀번호 재설정 링크가 이메일로 발송되었습니다.");
+        successBody.put("resetLink", resetLink); // 디버깅용 (실제 서비스에서는 제거)
+        return ResponseEntity.ok(successBody);
+    }   
+    
     // 회원 정보 수정
     @PutMapping("/member/update")
     public ResponseEntity<AuthInfo> updateUser(@RequestBody UserInfoDTO dto) {

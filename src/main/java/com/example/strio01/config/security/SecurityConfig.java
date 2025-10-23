@@ -95,7 +95,7 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(authorize -> authorize
 				// 특정 URL은 인증 없이 허용
 				// .requestMatchers("/api/v1/home", "/api/v1/join", "/api/v1/login").permitAll()
-			.requestMatchers("/","/images/**","/member/**","/member/list","/member/logout","/member/signup","/member/delete/**","/member/update","/member/updatePasswd","/notice/list/**","/notice/view/**","/board/list/**","/board/view/**","/board/contentdownload/**","/auth/refresh").permitAll()
+			.requestMatchers("/","/images/**","/member/**","/member/signup","/member/logout","/member/findId","/notice/list/**","/notice/view/**","/board/list/**","/board/view/**","/board/contentdownload/**","/auth/refresh").permitAll()
 				// 그외 모든 요청에 대해서 인증(로그인)이 되어야 한다.
 			.anyRequest().authenticated());
 
