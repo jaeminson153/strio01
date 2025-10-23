@@ -42,13 +42,14 @@ public class PrincipalDetailesService implements UserDetailsService {
 		}
 		
 		UserInfoEntity adminEntity = optMembersEntity.get();
-		log.info("adminId:{} pwd:{} name:{} role:{}",  adminEntity.getUserId(), adminEntity.getPasswd(),adminEntity.getUserName(),adminEntity.getRoleCd());
+		log.info("adminId:{} pwd:{} name:{} role:{} email:{}",  adminEntity.getUserId(), adminEntity.getPasswd(),adminEntity.getUserName(),adminEntity.getRoleCd(),adminEntity.getEmail());
 		System.out.println("====== login ======: 3");
 		AuthInfo authInfo = AuthInfo.builder()
 				.userId(adminEntity.getUserId())
 				.passwd(adminEntity.getPasswd())
 				.userName(adminEntity.getUserName())
 				.roleCd(adminEntity.getRoleCd())
+				.email(adminEntity.getEmail())
 				.build();
 		return new PrincipalDetails(authInfo);
 	}

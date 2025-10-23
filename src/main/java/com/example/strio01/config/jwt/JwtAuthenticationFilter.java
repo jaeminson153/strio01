@@ -69,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			 = new UsernamePasswordAuthenticationToken(adminDTO.getUserId(), adminDTO.getPasswd());
 			System.out.println("====== login ======: 1");
 			authentication = authManager.authenticate(authenticationToken);
-			System.out.println("====== login ======: 6");
+			System.out.println("====== login ======: 4");
 			log.info("authentication: {}", authentication.getPrincipal());
 			
 			PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();			
@@ -89,7 +89,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {		
 		log.info("successfulAuthentication 실행됨");
-		 System.out.println("====== login ======: 4");	
+		 System.out.println("====== login ======: 5");	
 		 PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 		 AuthInfo authInfo = principalDetails.getAuthInfo(); 
 		    
@@ -118,11 +118,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		//Access-Control-Expose-Headers는 브라우저에서 JavaScript가 응답 헤더를 읽을 수 있게 허용해주는 CORS 관련 헤더이다. 
 		//기본적으로 브라우저는 보안상의 이유로 일부 표준 헤더만 노출하고, 나머지는 차단한다.
 		response.setHeader("Access-Control-Expose-Headers", "Authorization, Authorization-refresh");
-		
+		System.out.println("====== login ======: 6");
 		final Map<String, Object> body = new HashMap<>();
 		body.put("userName", principalDetails.getAuthInfo().getUserName());
 		body.put("userId", principalDetails.getAuthInfo().getUserId());
 		body.put("roleCd", principalDetails.getAuthInfo().getRoleCd());
+		body.put("email", principalDetails.getAuthInfo().getEmail());
 		//body.put("authRole", principalDetails.getAuthInfo().getAuthRole());
 		// body.put("accessToken", accessToken);
 		// body.put("refreshToken", refreshToken);
