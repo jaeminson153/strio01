@@ -107,7 +107,7 @@ public class UserInfoController {
         String resetToken = java.util.UUID.randomUUID().toString();
         String resetLink = "http://localhost:3000/reset-password?token=" + resetToken + "&userId=" + userDTO.getUserId();
 
-        // 메일 전송
+        // 메일 전송   
         //mailService.sendPasswordResetMail(userDTO.getEmail(), resetLink);
 
         Map<String, Object> successBody = new HashMap<>();
