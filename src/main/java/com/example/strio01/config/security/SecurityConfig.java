@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -16,11 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.example.strio01.user.repository.UserInfoRepository;
-import com.example.strio01.user.service.AuthService;
 import com.example.strio01.config.jwt.JwtAuthenticationFilter;
 import com.example.strio01.config.jwt.JwtAuthorizationFilter;
 import com.example.strio01.config.jwt.JwtTokenProvider;
+import com.example.strio01.user.repository.UserInfoRepository;
+import com.example.strio01.user.service.AuthService;
 
 //[1] POSTMAN에서 테스트
 //POST http://localhost:8090/login
@@ -91,14 +92,22 @@ public class SecurityConfig {
 		sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		
 		// [5] 요청에 의한 권한 설정검사 시작
+		// ✅ 모든 요청 허용 (임시: 개발용)
+//		http.authorizeHttpRequests(auth -> auth
+//		    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // CORS preflight
+//		    .anyRequest().permitAll()                               // ✅ 전부 허용
+//		);
+		
 		
 		http.authorizeHttpRequests(authorize -> authorize
 				// 특정 URL은 인증 없이 허용
 				// .requestMatchers("/api/v1/home", "/api/v1/join", "/api/v1/login").permitAll()
 			.requestMatchers("/","/images/**","/member/**","/member/list","/member/logout","/member/signup","/member/delete/**","/member/update","/member/updatePasswd","/notice/list/**","/notice/view/**","/board/list/**","/board/view/**","/board/contentdownload/**","/auth/refresh").permitAll()
 				// 그외 모든 요청에 대해서 인증(로그인)이 되어야 한다.
+			.requestMatchers("/api/**", "/diagnosis/api/**").permitAll()
 			.anyRequest().authenticated());
-
+		
+		
 		   
 		// addFilter() : FilterComparator에 등록되어 있는 Filter들을 활성화할 때 사용
 		// addFilterBefore(), addFilterAfter() : CustomFilter를 등록할 때 사용
