@@ -21,11 +21,13 @@ import com.example.strio01.user.dto.UserInfoDTO;
 import com.example.strio01.user.entity.UserInfoEntity;
 import com.example.strio01.user.service.AuthService;
 import com.example.strio01.user.service.MailService;
+import com.example.strio01.user.service.PasswordResetService;
 import com.example.strio01.user.service.UserInfoService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import lombok.Data;
 
 @Slf4j
 @RestController
@@ -37,6 +39,9 @@ public class UserInfoController {
 
     @Autowired
     private AuthService authService;
+    
+    @Autowired
+    private PasswordResetService passwordResetService;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -104,11 +109,13 @@ public class UserInfoController {
         }
 
         // 비밀번호 재설정 링크 생성
-        String resetToken = java.util.UUID.randomUUID().toString();
-        String resetLink = "http://localhost:3000/reset-password?token=" + resetToken + "&userId=" + userDTO.getUserId();
+        //String resetToken = java.util.UUID.randomUUID().toString();
+        //String resetLink = "http://localhost:3000/reset-password?token=" + resetToken + "&userId=" + userDTO.getUserId();
+        String token = passwordResetService.createResetToken(userDTO.getUserId());
+        String resetLink = "http://localhost:3000/reset-password?token=" + token;
 
         // 메일 전송   
-        //mailService.sendPasswordResetMail(userDTO.getEmail(), resetLink);
+        mailService.sendPasswordResetMail(userDTO.getEmail(), resetLink);
 
         Map<String, Object> successBody = new HashMap<>();
         successBody.put("message", "비밀번호 재설정 링크가 이메일로 발송되었습니다.");
@@ -211,4 +218,28 @@ public class UserInfoController {
                     .body(Map.of("error", "토큰 검증 실패", "message", e.getMessage()));
         }
     }
+    
+    @Data
+    public static class ResetPasswordRequest {
+        private String token;
+        private String newPassword;
+
+        public String getToken() { return token; }
+        public void setToken(String token) { this.token = token; }
+
+        public String getNewPassword() { return newPassword; }
+        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
+    }
+    
+    @PostMapping("/member/resetPasswd")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest req) {
+        try {
+            passwordResetService.resetPassword(req.getToken(), req.getNewPassword());
+            return ResponseEntity.ok(Map.of("message", "비밀번호가 변경되었습니다."));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }    
+    
 }
